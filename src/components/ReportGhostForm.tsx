@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Ghost } from 'lucide-react';
-import { QUESTION_MAP, GhostStage } from '../constants/questions';
+import { QUESTION_MAP, type GhostStage } from '../constants/questions';
 import { useAuth } from '../context/AuthContext';
 
 const PRESET_TAGS = ['unprofessional', 'no-response', 'wasted-time', 'misleading', 'rude', 'unorganized', 'no-feedback', 'salary-lowball', 'bait-and-switch'];
