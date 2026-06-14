@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Layout from './components/Layout';
-import ReportGhostForm from './components/ReportGhostForm';
+import SubmitReview from "./pages/SubmitReview";
 
 const Home = () => <div className="p-8 text-center"><h1>Radical Transparency</h1></div>;
 
@@ -12,7 +12,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="submit" element={<ReportGhostForm />} />
+            <Route path="/submit" element={<SubmitReview />} />
           </Route>
         </Routes>
       </BrowserRouter>
