@@ -26,10 +26,47 @@ export default function ReportGhostForm() {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
 
+  // AWS S3 Upload State
+  const [uploading, setUploading] = useState(false);
+  const [fileUrls, setFileUrls] = useState<string[]>([]);
+
   // Step 1 Validation Rule: All four structural metadata fields are required to proceed
   const isStep1Valid = meta.first.trim() !== '' && meta.last.trim() !== '' && meta.email.trim() !== '' && meta.company.trim() !== '';
 
   if (authLoading) return null;
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      // 1. Get the presigned URL from the backend using the relative Vite proxy path
+      const response = await fetch(`/api/upload-url?filename=${encodeURIComponent(file.name)}&filetype=${encodeURIComponent(file.type)}`, {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) throw new Error("Failed to get upload URL");
+      const { uploadUrl, fileUrl } = await response.json();
+
+      // 2. Upload directly to S3
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type },
+        body: file
+      });
+
+      if (uploadResponse.ok) {
+        setFileUrls(prev => [...prev, fileUrl]);
+      } else {
+        console.error("AWS S3 Upload Rejected the File");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -49,7 +86,8 @@ export default function ReportGhostForm() {
           stage_answer_3: answers.q3,
           severity_rating,
           has_evidence,
-          tags
+          tags,
+          file_urls: fileUrls // Attach the S3 URLs to the final payload
         }),
       });
       const data = await res.json();
@@ -158,14 +196,44 @@ export default function ReportGhostForm() {
             </div>
           </div>
 
-          {/* Core Verification Checkbox Addition */}
+          {/* Core Verification Checkbox & Conditional S3 Upload */}
           <div className="p-4 bg-zinc-950 rounded border border-zinc-900 my-2">
             <label className="flex items-start gap-3 cursor-pointer select-none">
               <input type="checkbox" checked={has_evidence} className="accent-[#6C47FF] w-5 h-5 rounded mt-0.5" onChange={(e) => setHasEvidence(e.target.checked)} />
               <span className="text-sm text-zinc-300 leading-tight">
-                I have supporting evidence such as emails, messages, or screenshots that I can upload later to authenticate this report.
+                I have supporting evidence such as emails, messages, or screenshots to upload.
               </span>
             </label>
+
+            {has_evidence && (
+              <div className="mt-4 pt-4 border-t border-zinc-800">
+                <label className="block text-xs font-semibold uppercase text-zinc-400 tracking-wider mb-3">
+                  Attach Evidence (PDF, PNG, JPG)
+                </label>
+                <input 
+                  type="file" 
+                  onChange={handleFileUpload} 
+                  disabled={uploading}
+                  className="block w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-wider file:bg-[#6C47FF] file:text-white hover:file:bg-[#5835eb] transition-all disabled:opacity-50 cursor-pointer file:cursor-pointer"
+                />
+                
+                {uploading && <p className="text-xs text-[#6C47FF] mt-3 animate-pulse font-medium">Uploading securely to AWS...</p>}
+                
+                {fileUrls.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-xs text-zinc-500 mb-2 uppercase tracking-wider font-semibold">Attached Files</p>
+                    <ul className="text-xs text-zinc-300 list-disc pl-5 space-y-1">
+                      {fileUrls.map((url, i) => {
+                        const displayName = url.split('/').pop()?.split('-').slice(1).join('-') || `Attachment ${i + 1}`;
+                        return (
+                          <li key={i} className="truncate">{displayName}</li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <button onClick={handleSubmit} disabled={isLoading || severity_rating === 0} className="w-full bg-[#6C47FF] py-3.5 rounded-lg font-bold hover:bg-opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all mt-4 shadow-lg shadow-[#6C47FF]/10 text-base">
