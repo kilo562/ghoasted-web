@@ -18,7 +18,7 @@ export default function ReportGhostForm() {
   }, [user, authLoading, navigate]);
 
   // Form Variables State Trackers
-  const [meta, setMeta] = useState({ first: '', last: '', email: '', company: '' });
+  const [meta, setMeta] = useState({ first: '', last: '', email: '', phone: '', company: '' });
   const [stage, setStage] = useState<GhostStage>('INITIAL_OUTREACH');
   const [answers, setAnswers] = useState({ q1: '', q2: '', q3: '' });
   const [severity_rating, setSeverity] = useState(0);
@@ -79,6 +79,7 @@ export default function ReportGhostForm() {
           recruiter_first_name: meta.first,
           recruiter_last_name: meta.last,
           recruiter_email: meta.email,
+          recruiter_phone: meta.phone || null,
           company_name: meta.company,
           ghost_stage: stage,
           stage_answer_1: answers.q1,
@@ -116,6 +117,7 @@ export default function ReportGhostForm() {
           <input className="w-full bg-zinc-900 p-3 rounded border border-zinc-800 focus:border-[#6C47FF] outline-none" placeholder="Recruiter First Name" value={meta.first} onChange={e => setMeta({...meta, first: e.target.value})} />
           <input className="w-full bg-zinc-900 p-3 rounded border border-zinc-800 focus:border-[#6C47FF] outline-none" placeholder="Recruiter Last Name" value={meta.last} onChange={e => setMeta({...meta, last: e.target.value})} />
           <input className="w-full bg-zinc-900 p-3 rounded border border-zinc-800 focus:border-[#6C47FF] outline-none" type="email" placeholder="Recruiter Professional Email" value={meta.email} onChange={e => setMeta({...meta, email: e.target.value})} />
+        <input className="w-full bg-zinc-900 p-3 rounded border border-zinc-800 focus:border-[#6C47FF] outline-none" type="tel" placeholder="Recruiter Phone Number (Optional)" value={meta.phone} onChange={e => setMeta({...meta, phone: e.target.value})} />
           <input className="w-full bg-zinc-900 p-3 rounded border border-zinc-800 focus:border-[#6C47FF] outline-none" placeholder="Target Company Name" value={meta.company} onChange={e => setMeta({...meta, company: e.target.value})} />
           <button onClick={() => isStep1Valid && setStep(2)} disabled={!isStep1Valid} className="w-full bg-[#6C47FF] py-3 rounded font-bold hover:bg-opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed mt-4">Next: Select Ghosting Stage</button>
         </div>
