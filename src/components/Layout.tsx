@@ -48,7 +48,7 @@ export default function Layout() {
                 <LogOut size={18}/>
               </button>
               <Link to="/submit" className="bg-[#6C47FF] hover:bg-[#5b3ce0] text-white px-4 py-2 rounded font-bold text-sm transition-colors shadow-lg shadow-[#6C47FF]/20">
-                Report Ghost
+                Report Ghoast
               </Link>
             </>
           ) : (

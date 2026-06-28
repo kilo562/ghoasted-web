@@ -99,11 +99,11 @@ export default function Feed() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4">
-            They ghosted you. <br className="hidden sm:block" />
+            They Ghoasted you. <br className="hidden sm:block" />
             <span className="text-red-600">We remember everything.</span>
           </h1>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-            Search the public database of recruiter and company ghosting behavior. 
+            Search the public database of recruiter and company Ghoasting behavior. 
             Powered by verifiable corroboration algorithms.
           </p>
         </div>
