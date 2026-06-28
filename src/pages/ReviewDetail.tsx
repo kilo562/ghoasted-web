@@ -274,6 +274,23 @@ export default function ReviewDetail() {
             </div>
           )}
         </div>
+
+        {/* Dispute / Employer CTA */}
+        <div className="bg-zinc-950 p-6 border-t border-zinc-900">
+          <div className="flex items-start gap-3 mb-3">
+            <ShieldCheck className="w-5 h-5 text-[#6C47FF] shrink-0 mt-0.5" />
+            <h3 className="text-sm font-semibold text-white">Are you the recruiter or company mentioned in this report?</h3>
+          </div>
+          <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+            Ghoasted's Professional tier (launching Q4 2026) will allow verified recruiters and companies to submit factual responses that appear publicly alongside reports. Disputes are noted, never removed.
+          </p>
+          <Link
+            to="/employer-waitlist"
+            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-[#6C47FF] text-white hover:bg-[#5b3ce0] transition-colors"
+          >
+            Join the Employer Waitlist
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ export interface Review {
   masked_phone: string | null;
   company_score: { aggregate_score: number; confidence_level: string } | null;
   recruiter_score: { aggregate_score: number; confidence_level: string } | null;
+  _count?: { disputes: number };
 }
 
 interface Meta {

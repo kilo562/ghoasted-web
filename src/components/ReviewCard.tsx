@@ -126,6 +126,11 @@ export default function ReviewCard({ review }: { review: Review }) {
               #{tag}
             </span>
           ))}
+          {review._count?.disputes ? (
+            <span className="px-2 py-1 text-xs font-medium bg-[#6C47FF]/10 text-[#6C47FF] rounded-md border border-[#6C47FF]/20">
+              {review._count.disputes} {review._count.disputes === 1 ? 'response' : 'responses'}
+            </span>
+          ) : null}
         </div>
         
         <div className="text-xs text-zinc-500 font-medium whitespace-nowrap">
